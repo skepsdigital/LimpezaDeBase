@@ -62,7 +62,7 @@ namespace LimpezaDeBase.Limpeza.Strategy
                 }
             });
 
-            await _processamentoService.ProcessarLimpezaOptout(optoutResponse, processId, email);
+            await _processamentoService.ProcessarLimpezaOptout(optoutResponse, processId, email, contrato);
 
             await _processamentoRepository.AdicionarAsync(new ProcessamentoEntity
             {

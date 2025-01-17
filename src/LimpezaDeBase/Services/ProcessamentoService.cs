@@ -149,7 +149,7 @@ namespace LimpezaDeBase.Services
             }
         }
 
-        public async Task ProcessarLimpezaOptout(List<OptOutResultado> optoutResponse, string processId, string email)
+        public async Task ProcessarLimpezaOptout(List<OptOutResultado> optoutResponse, string processId, string email, string contrato)
         {
             var csvFullBytes = _csvService.GerarCsv<OptOutResultado, OptOutFullMap>(optoutResponse);
             var csvLiteBytes = _csvService.GerarCsvOptoutLite(optoutResponse.Where(o => o.NumeroEstaFormatado.Equals("Sim") && o.QuerReceberNotificao.Equals("Sim")).ToList());
@@ -163,6 +163,21 @@ namespace LimpezaDeBase.Services
 
             var url = await _aws.UploadZip(zipBytes, processId);
             await _email.SendMessageAsync(email, url);
+
+            var relatorio = new RelatorioEntity()
+            {
+                NumerosTotais = optoutResponse.Count(),
+                NumerosValidos = optoutResponse.Where(o => o.NumeroEstaFormatado.Equals("Sim") && o.QuerReceberNotificao.Equals("Sim")).Count(),
+                NumerosInvalidos = optoutResponse.Count() - optoutResponse.Where(o => o.NumeroEstaFormatado.Equals("Sim") && o.QuerReceberNotificao.Equals("Sim")).Count(),
+                LimposSkeps = 0,
+                LimposOptOut = optoutResponse.Where(o => o.NumeroEstaFormatado.Equals("Sim") && o.QuerReceberNotificao.Equals("Sim")).Count(),
+                LimposExterno = 0,
+                Contrato = contrato,
+                EnviouNotificacao = false,
+                IdProcessamento = processId,
+                IdNotificacoes = null,
+            };
+            await _relatorioRepository.AdicionarAsync(relatorio);
 
             _logger.LogInformation("Processamento finalizado.");
         }

@@ -6,7 +6,7 @@ namespace LimpezaDeBase.Services.Interfaces
     {
         Task EnviarEmailAcompanhamento(string email, string processId);
         Task ProcessarCallback(List<ContatoCallbackResponse> contatoCallbackResponse, string processId);
-        Task ProcessarLimpezaOptout(List<OptOutResultado> optoutResponse, string processId, string email);
+        Task ProcessarLimpezaOptout(List<OptOutResultado> optoutResponse, string processId, string email, string contrato);
         Task ProcessarLimpezaWhatsApp();
     }
 }

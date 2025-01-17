@@ -1,7 +1,5 @@
 using LimpezaDeBase.Infra.Interfaces;
-using LimpezaDeBase.Modelos;
 using LimpezaDeBase.Modelos.Mongo;
-using LimpezaDeBase.Services;
 using LimpezaDeBase.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
