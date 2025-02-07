@@ -36,7 +36,7 @@ namespace LimpezaDeBase.Controllers
         }
 
         [HttpPost("preencherCatalogoOptout")]
-        public async Task<IActionResult> PreencherCatalogo([FromForm] IFormFile file, string contrato, string roteador)
+        public async Task<IActionResult> PreencherCatalogo([FromForm] IFormFile file, [FromForm] string contrato, [FromForm] string roteador)
         {
             await _catalogoService.CadastraCatalogoOptout(file, contrato, roteador);
             return Ok("Documento adicionado com sucesso");

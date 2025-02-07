@@ -20,9 +20,9 @@ namespace LimpezaDeBase.Infra.Repository
             {
                 const string query = @"
                 INSERT INTO Processamento 
-                    (NumeroDeContatosTotal, ProcessId, Email, Contrato, Roteador, Data, FoiProcessado, EnviarNotificacao)
+                    (NumeroDeContatosTotal, ProcessId, Email, Contrato, Roteador, Data, FoiProcessado, EnviarNotificacao, Funcionalidade)
                 VALUES 
-                    (@NumeroDeContatosTotal, @ProcessId::uuid, @Email, @Contrato, @Roteador, @Data, @FoiProcessado, @EnviarNotificacao)
+                    (@NumeroDeContatosTotal, @ProcessId::uuid, @Email, @Contrato, @Roteador, @Data, @FoiProcessado, @EnviarNotificacao, @Funcionalidade)
                 RETURNING ID;";
 
                 using var connection = new NpgsqlConnection(_connectionString);

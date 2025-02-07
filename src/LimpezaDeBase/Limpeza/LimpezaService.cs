@@ -51,9 +51,10 @@ namespace LimpezaDeBase.Limpeza
                 if (cliente is null || contatos is null || contatos.Count() >= cliente.Creditos)
                     throw new Exception("Cliente invalido, lista sem contatos ou cliente sem crédito");
 
-                if(cliente.Funcionalidades is not null && cliente.Funcionalidades.First() != (upload.Funcionalidade))
+                if(cliente.Funcionalidades is not null &&!cliente.Funcionalidades.Contains(upload.Funcionalidade))
                     throw new Exception("Cliente não pode usar essa funcionalidade");
 
+                
                 _logger.LogInformation($"Cliente encontrado {cliente.Nome} - {cliente.Contrato}");
 
                 var numeroDeContatos = contatos.Count();

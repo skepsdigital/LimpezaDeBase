@@ -17,7 +17,7 @@ namespace LimpezaDeBase.Configuration
     {
         public ContatoMap()
         {
-            Map(m => m.Telefone).Index(0); 
+            Map(m => m.Telefone).Name("Telefone","TELEFONE","telefone","Numero","NUMERO","numero","Celular","CELULAR","celular"); 
             Map(m => m.CPF).Optional(); 
             Map(m => m.Extras).Convert(args =>
             {
@@ -26,9 +26,11 @@ namespace LimpezaDeBase.Configuration
 
                 foreach (var header in row.HeaderRecord)
                 {
-                    if (!string.Equals(header, "telefone", StringComparison.OrdinalIgnoreCase))
+                    if (!string.Equals(header, "telefone", StringComparison.OrdinalIgnoreCase) &&
+                        !string.Equals(header, "celular", StringComparison.OrdinalIgnoreCase) &&
+                        !string.Equals(header, "numero", StringComparison.OrdinalIgnoreCase))
                     {
-                        extras[header] = row.GetField(header);
+                        extras[header.ToLower()] = row.GetField(header);
                     }
                 }
 

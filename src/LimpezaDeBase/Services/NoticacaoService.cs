@@ -27,6 +27,11 @@ namespace LimpezaDeBase.Services
         {
             try
             {
+                telefonesProcessados = telefonesProcessados
+                        .GroupBy(t => t.Telefone)
+                        .Select(g => g.First())
+                        .ToList();
+
                 var bytesCsv = await ObterArquivoOriginal(processId);
                 List<dynamic> telefonesOriginais = await _csvService.LerCsvComoDinamico(bytesCsv);
 
@@ -44,7 +49,7 @@ namespace LimpezaDeBase.Services
                     {
                         telefoneOriginal = telefonesOriginais.First(t =>
                         {
-                            string telefoneStr = t.Telefone as string;
+                            string telefoneStr = t.TELEFONE as string;
                             return telefoneStr.NormalizarTelefone() == telefone.Telefone;
                         });
                     }
@@ -60,16 +65,13 @@ namespace LimpezaDeBase.Services
                     if (telefoneOriginal != null)
                     {
                         var messageParams = new Dictionary<string, string>();
-                        int index = 1;
 
-                        // Iterar pelas propriedades do objeto dinâmico
                         foreach (var property in (IDictionary<string, object>)telefoneOriginal)
                         {
                             if (property.Key.Equals("telefone", StringComparison.OrdinalIgnoreCase))
                                 continue;
 
-                            messageParams[index.ToString()] = property.Value?.ToString() ?? string.Empty;
-                            index++;
+                            messageParams[property.Key] = property.Value?.ToString() ?? string.Empty;
                         }
 
                         audiencia.Add(new Audience
@@ -103,7 +105,7 @@ namespace LimpezaDeBase.Services
                         {
                             MessageTemplate = notificacaoDados.Template,
                             MessageParams = audiencia.First().MessageParams is not null
-                                            ? audiencia.First().MessageParams.Select(d => d.Key).ToList()
+                                            ? audiencia.First().MessageParams.Where(d => d.Key.Contains("var")).Select(d => d.Key).ToList()
                                             : null,
                             ChannelType = "WhatsApp"
                         },

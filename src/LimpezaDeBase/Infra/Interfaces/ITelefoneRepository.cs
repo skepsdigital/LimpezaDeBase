@@ -11,5 +11,6 @@ namespace LimpezaDeBase.Infra.Interfaces
         Task<bool> DeleteAsync(int id);
         Task<List<TelefoneEntity>> PesquisarNumerosAsync(List<string> numeros);
         Task<List<TelefoneEntity>> PesquisarTelefonesNoRoteadorAsync(List<TelefoneEntity> numeros, string roteador);
+        Task<int> CreateManyAsync(IEnumerable<TelefoneEntity> telefones);
     }
 }

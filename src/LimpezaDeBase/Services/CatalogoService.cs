@@ -170,7 +170,7 @@ namespace LimpezaDeBase.Services
 
                 var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
                 {
-                    HasHeaderRecord = false,
+                    HasHeaderRecord = true,
                     Delimiter = ",",
                     MissingFieldFound = null
                 };

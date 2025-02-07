@@ -174,7 +174,27 @@ namespace LimpezaDeBase.Infra.Repository
             using var connection = CreateConnection();
             return await connection.ExecuteScalarAsync<int>(query, telefone);
         }
+        public async Task<int> CreateManyAsync(IEnumerable<TelefoneEntity> telefones)
+        {
+            const string query = @"
+                INSERT INTO Telefone (Telefone, DDI, DDD, PossuiWpp, Data)
+                VALUES (@Telefone, @DDI, @DDD, @PossuiWpp, @Data);
+            ";
 
+            using var connection = CreateConnection();
+
+            var parameters = telefones.Select(telefone => new
+            {
+                Telefone = telefone.Telefone,
+                DDI = telefone.Telefone.Substring(0, 2),
+                DDD = telefone.Telefone.Substring(2, 2),
+                PossuiWpp = telefone.PossuiWpp,
+                Data = DateTime.Now
+            });
+
+            // Executa todas as inserções em uma única operação
+            return await connection.ExecuteAsync(query, parameters);
+        }
         public async Task<TelefoneEntity?> GetByIdAsync(int id)
         {
             const string query = "SELECT * FROM Telefone WHERE ID = @ID;";

@@ -73,7 +73,9 @@ namespace LimpezaDeBase.Controllers
         [HttpGet("processarLimpeza")]
         public async Task<IActionResult> ProcessarLimpeza()
         {
-            _logger.LogInformation("Iniciando tentativa de processar resultados");
+            
+            
+           _logger.LogInformation("Iniciando tentativa de processar resultados");
             await _processamentoService.ProcessarLimpezaWhatsApp();
 
             return Ok("Documento adicionado com sucesso");

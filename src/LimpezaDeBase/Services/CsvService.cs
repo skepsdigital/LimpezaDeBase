@@ -118,7 +118,7 @@ namespace LimpezaDeBase.Services
                 using var streamReader = new StreamReader(memoryStream);
                 var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
                 {
-                    HasHeaderRecord = true, // Supõe que o CSV tem cabeçalhos
+                    HasHeaderRecord = true,
                     Delimiter = ",",
                     MissingFieldFound = null
                 };

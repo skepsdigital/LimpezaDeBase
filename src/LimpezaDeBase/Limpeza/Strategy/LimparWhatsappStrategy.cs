@@ -36,12 +36,6 @@ namespace LimpezaDeBase.Limpeza.Strategy
 
         public async Task Validar(List<Contato> contatos, string processId, string contrato, string roteador, string email, int numeroDeContatos, bool enviarNotificacao, List<Contato>? contatoExclusao = null)
         {
-            await LimparInternamente(contatos, processId, roteador);
-            await LimparOptOut(contatos, contrato, roteador, processId);
-            await LimparExternamente(contatos, processId);
-
-            await _processamentoService.EnviarEmailAcompanhamento(email, processId);
-
             await _processamentoRepository.AdicionarAsync(new ProcessamentoEntity
             {
                 Contrato = contrato,
@@ -54,6 +48,12 @@ namespace LimpezaDeBase.Limpeza.Strategy
                 EnviarNotificacao = enviarNotificacao,
                 Funcionalidade = "limpezaDeBase"
             });
+
+            await LimparOptOut(contatos, contrato, roteador, processId);
+            await LimparInternamente(contatos, processId, roteador);
+            await LimparExternamente(contatos, processId);
+
+            await _processamentoService.EnviarEmailAcompanhamento(email, processId);
         }
 
 
@@ -85,9 +85,10 @@ namespace LimpezaDeBase.Limpeza.Strategy
                 }
             }
 
-            contatos.RemoveAll(baseVerificada.TelefonesVerificados.Select(t => new Contato { Telefone = t.Telefone }).Contains);
+            var telefonesVerificados = baseVerificada.TelefonesVerificados.Select(t => t.Telefone).ToHashSet();
+            contatos.RemoveAll(c => telefonesVerificados.Contains(c.Telefone));
 
-            if (baseVerificada.TelefonesVerificados.Any())
+            if (baseVerificada.TelefonesVerificados.Count != 0)
             {
                 await _mongoService.AdicionarDocumentoAsync(baseVerificada);
             }

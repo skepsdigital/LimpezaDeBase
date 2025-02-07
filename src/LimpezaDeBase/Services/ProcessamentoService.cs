@@ -57,8 +57,6 @@ namespace LimpezaDeBase.Services
                 t.Data = DateTime.Now;
                 t.DDI = t.Telefone.Substring(0, 2);
                 t.DDD = t.Telefone.Substring(2, 2);
-
-                await _telefoneRepository.CreateAsync(t);
             });
 
             await _mongoService.AdicionarDocumentoAsync(baseVerificada);
@@ -85,6 +83,11 @@ namespace LimpezaDeBase.Services
                     {
                         contatosRespostaFinal.AddRange(contatoMongo.TelefonesVerificados);
                     });
+
+                    contatosRespostaFinal = contatosRespostaFinal
+                        .GroupBy(t => t.Telefone)
+                        .Select(g => g.First())
+                        .ToList();
 
                     var relatorioCsv = new RelatorioLimpeza()
                     {
